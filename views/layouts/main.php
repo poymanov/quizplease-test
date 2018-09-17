@@ -39,6 +39,7 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Organizations', 'url' => ['/organization']],
+            ['label' => 'Active record', 'url' => ['/site/active-record']],
         ],
     ]);
     NavBar::end();

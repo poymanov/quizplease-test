@@ -2,7 +2,9 @@
 
 namespace app\controllers;
 
+use app\models\User;
 use Yii;
+use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
@@ -124,5 +126,24 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    public function actionActiveRecord()
+    {
+        $name = Yii::$app->request->get('name');
+
+        $query = User::find()->select('user.id AS user_id, profile.name as name');
+        $query->leftJoin('profile', 'user.id=profile.user_id');
+        $query->andFilterWhere(['like', 'profile.name', $name]);
+        $query->asArray();
+
+        $users = $query->all();
+
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $users,
+        ]);
+
+        return $this->render('activeRecord', compact('dataProvider'));
+
     }
 }
