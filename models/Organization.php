@@ -48,6 +48,7 @@ class Organization extends \yii\db\ActiveRecord
             'inn' => 'Inn',
             'kpp' => 'Kpp',
             'phone' => 'Phone',
+            'contactPersonName' => 'Contact Person Name',
         ];
     }
 
@@ -71,5 +72,20 @@ class Organization extends \yii\db\ActiveRecord
 
         $this->contact_person_id = $person->id;
         return $this->save();
+    }
+
+    public function getContactPersonName()
+    {
+        return $this->contactPerson->name;
+    }
+
+    public function getContactPersonSurname()
+    {
+        return $this->contactPerson->surname;
+    }
+
+    public function getContactPersonEmail()
+    {
+        return $this->contactPerson->email;
     }
 }

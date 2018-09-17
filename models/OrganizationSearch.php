@@ -12,6 +12,9 @@ use app\models\Organization;
  */
 class OrganizationSearch extends Organization
 {
+    public $contactPersonName;
+    public $contactPersonSurname;
+    public $contactPersonEmail;
     /**
      * {@inheritdoc}
      */
@@ -19,7 +22,7 @@ class OrganizationSearch extends Organization
     {
         return [
             [['id'], 'integer'],
-            [['title', 'address', 'inn', 'kpp', 'phone'], 'safe'],
+            [['title', 'address', 'inn', 'kpp', 'phone', 'contactPersonName', 'contactPersonSurname', 'contactPersonEmail'], 'safe'],
         ];
     }
 
@@ -49,6 +52,29 @@ class OrganizationSearch extends Organization
             'query' => $query,
         ]);
 
+        $dataProvider->setSort([
+            'attributes' => [
+                'id',
+                'title',
+                'address',
+                'inn',
+                'kpp',
+                'phone',
+                'contactPersonName' => [
+                    'asc' => ['persons.name' => SORT_ASC],
+                    'desc' => ['persons.name' => SORT_DESC],
+                ],
+                'contactPersonSurname' => [
+                    'asc' => ['persons.surname' => SORT_ASC],
+                    'desc' => ['persons.surname' => SORT_DESC],
+                ],
+                'contactPersonEmail' => [
+                    'asc' => ['persons.email' => SORT_ASC],
+                    'desc' => ['persons.email' => SORT_DESC],
+                ],
+            ]
+        ]);
+
         $this->load($params);
 
         if (!$this->validate()) {
@@ -67,6 +93,12 @@ class OrganizationSearch extends Organization
             ->andFilterWhere(['like', 'inn', $this->inn])
             ->andFilterWhere(['like', 'kpp', $this->kpp])
             ->andFilterWhere(['like', 'phone', $this->phone]);
+
+        $query->joinWith(['contactPerson' => function ($q) {
+            $q->andFilterWhere(['like', 'persons.name', $this->contactPersonName]);
+            $q->andFilterWhere(['like', 'persons.surname', $this->contactPersonSurname]);
+            $q->andFilterWhere(['like', 'persons.email', $this->contactPersonEmail]);
+        }]);
 
         return $dataProvider;
     }
