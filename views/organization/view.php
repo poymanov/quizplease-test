@@ -38,4 +38,14 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
+    <h2>Contact Person</h2>
+
+    <?= DetailView::widget([
+        'model' => $model->contactPerson,
+        'attributes' => [
+            'name',
+            'surname',
+            'email'
+        ],
+    ]) ?>
 </div>

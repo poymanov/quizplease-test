@@ -13,6 +13,7 @@ use Yii;
  * @property string $inn
  * @property string $kpp
  * @property string $phone
+ * @property integer $contact_person_id
  */
 class Organization extends \yii\db\ActiveRecord
 {
@@ -30,7 +31,8 @@ class Organization extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'address', 'inn', 'kpp', 'phone'], 'string', 'max' => 255],
+            [['title', 'address', 'inn', 'kpp', 'phone'], 'required'],
+            ['contact_person_id', 'safe']
         ];
     }
 
@@ -47,5 +49,27 @@ class Organization extends \yii\db\ActiveRecord
             'kpp' => 'Kpp',
             'phone' => 'Phone',
         ];
+    }
+
+    public function getContactPerson()
+    {
+        return $this->hasOne(Person::class, ['id' => 'contact_person_id']);
+    }
+
+    public function afterDelete()
+    {
+        parent::afterDelete();
+
+        $contactPerson = $this->contactPerson;
+        $contactPerson->delete();
+    }
+
+    public function saveWithPerson(Person $person) {
+        if (!$person->save()) {
+            return false;
+        }
+
+        $this->contact_person_id = $person->id;
+        return $this->save();
     }
 }

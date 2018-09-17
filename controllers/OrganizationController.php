@@ -2,9 +2,11 @@
 
 namespace app\controllers;
 
+use app\models\Person;
 use Yii;
 use app\models\Organization;
 use app\models\OrganizationSearch;
+use yii\base\Model;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -65,14 +67,18 @@ class OrganizationController extends Controller
     public function actionCreate()
     {
         $model = new Organization();
+        $modelPerson = new Person();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $postData = Yii::$app->request->post();
+
+        if ($model->load($postData) && $modelPerson->load($postData)
+            && Model::validateMultiple([$model, $modelPerson])
+            && $model->saveWithPerson($modelPerson)) {
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        return $this->render('create', compact('model', 'modelPerson'));
     }
 
     /**
@@ -85,14 +91,17 @@ class OrganizationController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $modelPerson = $this->findPersonModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $postData = Yii::$app->request->post();
+
+        if ($model->load($postData) && $modelPerson->load($postData)
+            && Model::validateMultiple([$model, $modelPerson])
+            && $model->saveWithPerson($modelPerson)) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        return $this->render('update', compact('model', 'modelPerson'));
     }
 
     /**
@@ -119,6 +128,15 @@ class OrganizationController extends Controller
     protected function findModel($id)
     {
         if (($model = Organization::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    protected function findPersonModel($id)
+    {
+        if (($model = Person::findOne($id)) !== null) {
             return $model;
         }
 

@@ -5,6 +5,7 @@ use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Organization */
+/* @var $modelPerson app\models\Person */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -21,6 +22,12 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'kpp')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'phone')->textInput(['maxlength' => true]) ?>
+
+    <h3>Contact person</h3>
+
+    <?= $form->field($modelPerson, 'name')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($modelPerson, 'surname')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($modelPerson, 'email')->input('email') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
