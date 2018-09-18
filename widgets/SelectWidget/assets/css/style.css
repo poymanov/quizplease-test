@@ -1,0 +1,19 @@
+.custom-dropdown {
+    position: relative;
+}
+
+.custom-dropdown-list {
+    position: absolute;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: none;
+    z-index: 100;
+}
+
+.custom-dropdown-list li {
+    display: block;
+    background-color: #cdddeb;
+    padding: 5px;
+    border-bottom: 2px solid #fff;
+}

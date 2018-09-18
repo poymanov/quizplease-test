@@ -40,6 +40,7 @@ AppAsset::register($this);
         'items' => [
             ['label' => 'Organizations', 'url' => ['/organization']],
             ['label' => 'Active record', 'url' => ['/site/active-record']],
+            ['label' => 'Widget', 'url' => ['/product/create']],
         ],
     ]);
     NavBar::end();
